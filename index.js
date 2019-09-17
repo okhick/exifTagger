@@ -9,9 +9,15 @@ program
   .option('--csv <file>', 'The data CSV')
   .option('--input <directory>', 'Path to untagged images')
   .option('--output <directory>', 'Place to put the tagged images')
-  .option('--profile <directory>', 'Place where the profile files are');
+  .option('--profile <directory>', 'Place where the profile files are')
+  .option('--readOnly', 'Only reads exif data');
 
 program.parse(process.argv);
+
+if (program.readOnly) {
+  readExif();
+  return;
+}
 
 //load up the photo info
 const csv = ( () => {
@@ -51,17 +57,18 @@ csv.forEach( (line) => {
     const exifArgs = {
       "LensMake" : cameraInfo.lens.LensMake,
       "LensModel" : cameraInfo.lens.LensModel,
-      "DateTimeOriginal": line.DateTimeOriginal,
+      "DateTimeOriginal": {"date":line.Date, "time":line.Time},
       "ExposureTime": line.ExposureTime,
       "FNumber": line.FNumber,
-      "Flash": line.Flash,
+      "Flash": (line.Flash) ? line.Flash : 0,
       "ISOSpeedRatings": line.ISOSpeedRatings,
       "FocalLength": line.FocalLength,
-      "FocalLengthIn35mmFilm": line.FocalLengthIn35mmFilm
+      "FocalLengthIn35mmFilm": line.FocalLengthIn35mmFilm,
+      "ExposureBiasValue": line.ExposureBiasValue
     }
 
-    const inputFile = `${program.input}/${photoName}`;
-    const outputFile = `${program.output}/${photoName}`;
+    const inputFile = `${program.input}/${line.input_name}`;
+    const outputFile = `${program.output}/${line.output_name}`;
 
     const testImage = new Image(inputFile, outputFile, zerothArgs, exifArgs);
       testImage.readImage();
@@ -72,7 +79,7 @@ csv.forEach( (line) => {
       testImage.generateImageWithExif();
       testImage.saveImageWithExif();
 
-    console.log(`${photoName} has been tagged!`);
+    console.log(`${outputFile} has been tagged!`);
     counter++;
 
     if (counter === csv.length) {
@@ -86,7 +93,7 @@ csv.forEach( (line) => {
 
 
 function readExif() {
-  const testImage = new Image(`./img/20190808_01.jpg`, zerothArgs, exifArgs);
+  const testImage = new Image(`./20190901_5.JPG`, {}, {});
   testImage.readImage();
   testImage.readExif();
   testImage.printExif();

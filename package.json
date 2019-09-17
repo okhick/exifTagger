@@ -11,6 +11,7 @@
   "dependencies": {
     "commander": "^3.0.0",
     "csv-parse": "^4.4.5",
+    "luxon": "^1.17.3",
     "moment": "^2.24.0",
     "piexifjs": "^1.0.4"
   }

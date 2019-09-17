@@ -1,6 +1,6 @@
 const piexif = require('piexifjs');
 const fs = require('fs');
-const moment = require('moment');
+const { DateTime } = require('luxon');
 
 class Image {
   constructor(input, output, zerothArgs, exifArgs) {
@@ -59,6 +59,7 @@ class Image {
     exifData.ISOSpeedRatings = parseInt(this.exifArgs.ISOSpeedRatings);
     exifData.FocalLength = this.__calculateFocalLength(this.exifArgs.FocalLength);
     exifData.FocalLengthIn35mmFilm = this.__calculateFocalLength(this.exifArgs.FocalLengthIn35mmFilm);
+    exifData.ExposureBiasValue = this.__calculateCompensation();
     // console.log(this.exifObject);
   }
 
@@ -133,7 +134,7 @@ class Image {
   // ===============================================================//
 
   __calculateFocalLength(length) {
-    return [ parseInt(length) , 1 ];
+    return [ parseInt(length) , 1 ]
   }
 
   __calculateExposureTime() {
@@ -165,18 +166,33 @@ class Image {
     }
   }
 
+  __calculateCompensation() {
+    let compensation = this.exifArgs.ExposureBiasValue;
+
+    if(Number.isSafeInteger(compensation)) { //if it's already an int
+      return [compensation, 0];
+    } else {
+      compensation = compensation.split("/").map ( (str) => {
+        let strNoWhite = str.replace(/\s+/g, '');
+        return parseInt(strNoWhite);
+      });
+      return compensation;
+    }
+  }
+
   __getDateCreated() {
     let allStats = fs.statSync(this.input);
     let birthTime = allStats.birthtime;
-    let parsedTime = moment(birthTime);
-    let formattedTime = parsedTime.format('YYYY:MM:DD HH:mm:ss');
+    let parsedTime = birthTime.toISOString();
+    let formattedTime = DateTime.fromISO(parsedTime).toFormat('yyyy:MM:dd HH:mm:ss');
     return formattedTime;
   }
 
   __formatTimeOriginal() {
     let rawTime = this.exifArgs.DateTimeOriginal;
-    let parsedTime = moment(rawTime);
-    let formattedTime = parsedTime.format('YYYY:MM:DD HH:mm:ss');
+    let timeString = `${rawTime.date} ${rawTime.time}`;
+    let parsedTime = DateTime.fromFormat(timeString, 'yyyy-MM-dd h:mm a');
+    let formattedTime = parsedTime.toFormat('yyyy:MM:dd HH:mm:ss');
     return formattedTime;
   }
 }
