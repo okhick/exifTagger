@@ -80,7 +80,11 @@ csv.forEach( (line) => {
       testImage.readExif();
       testImage.prepareNewZeroth();
       testImage.prepareNewExif();
-      testImage.prepareNewGPS();
+      try {
+        testImage.prepareNewGPS();
+      } catch (e) {
+        console.log("No GPS data? Looks like it...");
+      }
       testImage.swapExifIds();
       testImage.generateImageWithExif();
       testImage.saveImageWithExif();

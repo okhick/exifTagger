@@ -244,9 +244,13 @@ Array.prototype.gcd = function () {
    if (this.length === 0)
      return null;
    return this.reduce((prev, curr) => {
-   if (curr <= 1.00000000001e-12)
-     return prev
+   if (curr <= 0.0001)
+     return Math.ceil(prev);
    else
      return [curr, prev % curr].gcd();
    });
  }
+
+ function gcd(k, n) {
+  return k ? gcd(n % k, k) : n;
+}
