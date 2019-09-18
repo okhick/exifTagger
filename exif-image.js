@@ -1,13 +1,15 @@
 const piexif = require('piexifjs');
 const fs = require('fs');
 const { DateTime } = require('luxon');
+const FormatCoords = require('formatcoords');
 
 class Image {
-  constructor(input, output, zerothArgs, exifArgs) {
-    this.input = input;
-    this.output = output;
+  constructor(IO, zerothArgs, exifArgs, gpsArgs) {
+    this.input = IO.input;
+    this.output = IO.output;
     this.zerothArgs = zerothArgs;
     this.exifArgs = exifArgs;
+    this.gpsArgs = gpsArgs
     this.exifObject = {
       "0th": {},
       "Exif": {},
@@ -63,6 +65,11 @@ class Image {
     // console.log(this.exifObject);
   }
 
+  prepareNewGPS() {
+    let parsedGPS = this.__parseGPS();
+    this.exifObject.GPS = {...parsedGPS};
+  }
+
   swapExifIds() {
     for (let ifd in this.exifObject) {
       let thisIfd = this.exifObject[ifd];
@@ -109,7 +116,7 @@ class Image {
   generateImageWithExif() {
     let exifBytes = piexif.dump(this.exifObject);
     let newImageBin = piexif.insert(exifBytes, this.imageBin);
-    this.newImage = new Buffer(newImageBin, "binary");
+    this.newImage = new Buffer.from(newImageBin, "binary");
   }
 
   saveImageWithExif() {
@@ -117,7 +124,7 @@ class Image {
   }
 
   printExif() {
-    console.log(this.exifObject['Exif']);
+    console.log(this.exifObject['GPS']);
     // for (var ifd in this.exifObject) {
     //   if (ifd == "thumbnail") {
     //     continue;
@@ -154,16 +161,11 @@ class Image {
     //strip out the 'f' convert to number
     if(fNumber.charAt(0) === 'f') {
       fNumber = parseFloat(fNumber.slice(1));
+    } else {
+      fNumber = parseFloat(fNumber);
     }
 
-    if(Number.isSafeInteger(fNumber)) { //if it's already an int
-      return [fNumber , 1];
-    } else {
-      //multiply by 10 to get rid of the float, find the greatest common denom.
-      let gcd = [fNumber * 10 , 10].gcd();
-      //divide each number by gcd to get the correct array structure
-      return [(fNumber * 10)/gcd , 10/gcd];
-    }
+    return this.__formatInRational(fNumber, 2);
   }
 
   __calculateCompensation() {
@@ -194,6 +196,43 @@ class Image {
     let parsedTime = DateTime.fromFormat(timeString, 'yyyy-MM-dd h:mm a');
     let formattedTime = parsedTime.toFormat('yyyy:MM:dd HH:mm:ss');
     return formattedTime;
+  }
+
+  __parseGPS() {
+    let latitude = parseFloat(this.gpsArgs.Latitude);
+    let longitude = parseFloat(this.gpsArgs.Longitude);
+
+    let coords = FormatCoords(latitude, longitude);
+    let latitudeFormatted = [
+      this.__formatInRational(coords.latValues.degrees, 4),
+      this.__formatInRational(coords.latValues.minutes, 4),
+      this.__formatInRational(coords.latValues.seconds, 4)
+    ];
+    let longitudeFormatted = [
+      this.__formatInRational(coords.lonValues.degrees, 4),
+      this.__formatInRational(coords.lonValues.minutes, 4),
+      this.__formatInRational(coords.lonValues.seconds, 4)
+    ]
+
+    return {
+      GPSLatitudeRef: (coords.north) ? 'N' : 'S',
+      GPSLatitude: latitudeFormatted,
+      GPSLongitudeRef: (coords.east) ? 'E' : 'W',
+      GPSLongitude: longitudeFormatted
+    }
+  }
+
+  __formatInRational(num, exp) {
+    let mul = Math.pow(10, exp);
+    if(Number.isSafeInteger(num)) { //if it's already an int
+      return [num , 1];
+    } else {
+      let fixedNum = num.toFixed(4);
+      //multiply by 10000 to get rid of the float, find the greatest common denom.
+      let gcd = [fixedNum * mul , mul].gcd();
+      //divide each number by gcd to get the correct array structure
+      return [(fixedNum * mul)/gcd , mul/gcd];
+    }
   }
 }
 

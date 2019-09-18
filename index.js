@@ -44,8 +44,6 @@ let counter = 0;
 csv.forEach( (line) => {
   try {
 
-    const photoName = line.photo_name;
-
     const zerothArgs = {
       "Make": cameraInfo.camera.Make,
       "Model": cameraInfo.camera.Model,
@@ -55,8 +53,8 @@ csv.forEach( (line) => {
     }
 
     const exifArgs = {
-      "LensMake" : cameraInfo.lens.LensMake,
-      "LensModel" : cameraInfo.lens.LensModel,
+      "LensMake": cameraInfo.lens.LensMake,
+      "LensModel": cameraInfo.lens.LensModel,
       "DateTimeOriginal": {"date":line.Date, "time":line.Time},
       "ExposureTime": line.ExposureTime,
       "FNumber": line.FNumber,
@@ -67,19 +65,27 @@ csv.forEach( (line) => {
       "ExposureBiasValue": line.ExposureBiasValue
     }
 
-    const inputFile = `${program.input}/${line.input_name}`;
-    const outputFile = `${program.output}/${line.output_name}`;
+    const gpsArgs = {
+      "Latitude": line.Latitude,
+      "Longitude": line.Longitude
+    }
 
-    const testImage = new Image(inputFile, outputFile, zerothArgs, exifArgs);
+    const IO = {
+      "input": `${program.input}/${line.input_name}`,
+      "output": `${program.output}/${line.output_name}`
+    }
+
+    const testImage = new Image(IO, zerothArgs, exifArgs, gpsArgs);
       testImage.readImage();
       testImage.readExif();
       testImage.prepareNewZeroth();
       testImage.prepareNewExif();
+      testImage.prepareNewGPS();
       testImage.swapExifIds();
       testImage.generateImageWithExif();
       testImage.saveImageWithExif();
 
-    console.log(`${outputFile} has been tagged!`);
+    console.log(`${IO.output} has been tagged!`);
     counter++;
 
     if (counter === csv.length) {
@@ -93,7 +99,8 @@ csv.forEach( (line) => {
 
 
 function readExif() {
-  const testImage = new Image(`./20190901_5.JPG`, {}, {});
+  const image = {input: './20190901_5.JPG'}
+  const testImage = new Image(image, {}, {});
   testImage.readImage();
   testImage.readExif();
   testImage.printExif();
