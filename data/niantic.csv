@@ -1,2 +1,13 @@
-Shot #,input_name,output_name,FNumber,ExposureTime,ExposureBiasValue,Date,Time,Location,Latitude,Longitude,Notes,ISOSpeedRatings,FocalLength,FocalLengthIn35mmFilm,ImageDescription
+Shot #,input_name,output_name,FNumber,ExposureTime,ExposureBiasValue,Date,Time,Location,Latitude,Longitude,Notes,ISOSpeedRatings,FocalLength,FocalLengthIn35mmFilm,ImageDescription 
+27,000536660028.jpg,20190901_1.jpg,2.8,1/1000,0,2019-09-01,12:50 PM,"Niantic, CT",41.30651855,-72.20919214,Smoker back,400,50,50,Shot of Fujicolor Superia X-tra 400 
+28,000536660029.jpg,20190901_2.jpg,2.8,1/500,0,2019-09-01,12:51 PM,"Niantic, CT",41.30651855,-72.20919214,Smoker front,400,50,50,Shot of Fujicolor Superia X-tra 400 
+29,000536660030.jpg,20190901_3.jpg,2.8,1/60,0,2019-09-01,2:11 PM,"Niantic, CT",41.30688477,-72.20907611,Chris bartending ,400,50,50,Shot of Fujicolor Superia X-tra 400 
+30,000536660031.jpg,20190901_4.jpg,4,1/1000,0,2019-09-01,5:20 PM,"Niantic, CT",41.32235718,-72.19910256,Aaron,400,50,50,Shot of Fujicolor Superia X-tra 400 
 31,000536660032.jpg,20190901_5.jpg,16,1/1000,- 1/3,2019-09-01,5:37 PM,"Niantic, CT",41.30685425,-72.20884471,Yacht club,400,50,50,Shot of Fujicolor Superia X-tra 400 
+32,000536660033.jpg,20190901_6.jpg,2.8,1/1000,- 1/3,2019-09-01,5:38 PM,"Niantic, CT",41.30685425,-72.20884471,One of the kids,400,50,50,Shot of Fujicolor Superia X-tra 400 
+33,000536660034.jpg,20190901_7.jpg,2.8,1/1000,- 1/3,2019-09-01,6:52 PM,"Niantic, CT",41.32217407,-72.19042368,Caleb,400,50,50,Shot of Fujicolor Superia X-tra 400 
+34,000536660035.jpg,20190901_8.jpg,16,1/1000,- 2/3,2019-09-01,7:02 PM,"Niantic, CT",41.31130981,-72.20217256,Babe,400,50,50,Shot of Fujicolor Superia X-tra 400 
+35,000536660036.jpg,20190901_9.jpg,4,1/1000,- 2/3,2019-09-01,7:02 PM,"Niantic, CT",41.31130981,-72.20217256,Babe 2,400,50,50,Shot of Fujicolor Superia X-tra 400 
+36,000536660037.jpg,20190901_10.jpg,1.8,1/15,0,2019-09-01,9:12 PM,"Niantic, CT",41.3107605,-72.20273971,Party tent,400,50,50,Shot of Fujicolor Superia X-tra 400 
+,000536660038.jpg,20190902_1.jpg,2.8,1/30,0,2019-09-02,7:58 PM,"Manhatttan, NY",,,,400,50,50,Shot of Fujicolor Superia X-tra 400 
+,000536660039.jpg,20190902_2.jpg,8,1/30,0,2019-09-02,8:00 PM,"Manhatttan, NY",,,,400,50,50,Shot of Fujicolor Superia X-tra 400 

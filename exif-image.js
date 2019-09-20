@@ -204,13 +204,13 @@ class Image {
 
     let coords = FormatCoords(latitude, longitude);
     let latitudeFormatted = [
-      this.__formatInRational(coords.latValues.degrees, 4),
-      this.__formatInRational(coords.latValues.minutes, 4),
+      this.__formatInRational(coords.latValues.degreesInt, 1),
+      this.__formatInRational(coords.latValues.minutesInt, 1),
       this.__formatInRational(coords.latValues.seconds, 4)
     ];
     let longitudeFormatted = [
-      this.__formatInRational(coords.lonValues.degrees, 4),
-      this.__formatInRational(coords.lonValues.minutes, 4),
+      this.__formatInRational(coords.lonValues.degreesInt, 1),
+      this.__formatInRational(coords.lonValues.minutesInt, 1),
       this.__formatInRational(coords.lonValues.seconds, 4)
     ]
 
@@ -224,15 +224,12 @@ class Image {
 
   __formatInRational(num, exp) {
     let mul = Math.pow(10, exp);
-    if(Number.isSafeInteger(num)) { //if it's already an int
-      return [num , 1];
-    } else {
-      let fixedNum = num.toFixed(4);
-      //multiply by 10000 to get rid of the float, find the greatest common denom.
-      let gcd = [fixedNum * mul , mul].gcd();
-      //divide each number by gcd to get the correct array structure
-      return [(fixedNum * mul)/gcd , mul/gcd];
-    }
+    
+    let fixedNum = num.toFixed(4);
+    //multiply by 10000 to get rid of the float, find the greatest common denom.
+    let gcd = [fixedNum * mul , mul].gcd();
+    //divide each number by gcd to get the correct array structure
+    return [(fixedNum * mul)/gcd , mul/gcd];
   }
 }
 
