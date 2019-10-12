@@ -4,7 +4,7 @@ const { DateTime } = require('luxon');
 const FormatCoords = require('formatcoords');
 
 class Image {
-  constructor(IO, zerothArgs, exifArgs, gpsArgs) {
+  constructor(IO, zerothArgs, exifArgs, gpsArgs, lensProfile) {
     this.input = IO.input;
     this.output = IO.output;
     this.zerothArgs = zerothArgs;
@@ -17,6 +17,7 @@ class Image {
       "Interop": {},
       "1st": {}
     };
+    this.lensProfile = lensProfile;
   }
 
   readImage() {
@@ -52,8 +53,10 @@ class Image {
 
   prepareNewExif() {
     let exifData = this.exifObject.Exif;
-    exifData.LensMake = this.exifArgs.LensMake;
-    exifData.LensModel = this.exifArgs.LensModel;
+    let lens = this.__chooseLens(this.exifArgs.LensLength);
+
+    exifData.LensMake = lens.LensMake;
+    exifData.LensModel = lens.LensModel;
     exifData.DateTimeOriginal = this.__formatTimeOriginal();
     exifData.DateTimeDigitized = this.__getDateCreated();
     exifData.ExposureTime = this.__calculateExposureTime();
@@ -166,6 +169,14 @@ class Image {
     }
 
     return this.__formatInRational(fNumber, 2);
+  }
+
+  __chooseLens(lensLength) {
+    for(let profile of this.lensProfile) {
+      if (profile.LensLength == lensLength) {
+        return profile
+      }
+    }
   }
 
   __calculateCompensation() {

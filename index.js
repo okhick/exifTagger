@@ -53,8 +53,6 @@ csv.forEach( (line) => {
     }
 
     const exifArgs = {
-      "LensMake": cameraInfo.lens.LensMake,
-      "LensModel": cameraInfo.lens.LensModel,
       "DateTimeOriginal": {"date":line.Date, "time":line.Time},
       "ExposureTime": line.ExposureTime,
       "FNumber": line.FNumber,
@@ -62,7 +60,8 @@ csv.forEach( (line) => {
       "ISOSpeedRatings": line.ISOSpeedRatings,
       "FocalLength": line.FocalLength,
       "FocalLengthIn35mmFilm": line.FocalLengthIn35mmFilm,
-      "ExposureBiasValue": line.ExposureBiasValue
+      "ExposureBiasValue": line.ExposureBiasValue,
+      "LensLength": line.LensLength
     }
 
     const gpsArgs = {
@@ -75,19 +74,19 @@ csv.forEach( (line) => {
       "output": `${program.output}/${line.output_name}`
     }
 
-    const testImage = new Image(IO, zerothArgs, exifArgs, gpsArgs);
-      testImage.readImage();
-      testImage.readExif();
-      testImage.prepareNewZeroth();
-      testImage.prepareNewExif();
+    const image = new Image(IO, zerothArgs, exifArgs, gpsArgs, cameraInfo.lens);
+      image.readImage();
+      image.readExif();
+      image.prepareNewZeroth();
+      image.prepareNewExif();
       try {
-        testImage.prepareNewGPS();
+        image.prepareNewGPS();
       } catch (e) {
         console.log("No GPS data? Looks like it...");
       }
-      testImage.swapExifIds();
-      testImage.generateImageWithExif();
-      testImage.saveImageWithExif();
+      image.swapExifIds();
+      image.generateImageWithExif();
+      image.saveImageWithExif();
 
     console.log(`${IO.output} has been tagged!`);
     counter++;

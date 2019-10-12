@@ -3,8 +3,16 @@
     "Make": "Canon",
     "Model": "FT QL"
   },
-  "lens": {
-    "LensMake": "Canon",
-    "LensModel": "FD 50mm 1:1.8"
-  }
+  "lens": [
+    {
+      "LensMake": "Canon",
+      "LensModel": "FD 50mm 1:1.8",
+      "LensLength": "50"
+    },
+    {
+      "LensMake": "Canon",
+      "LensModel": "FD 70-210mm 1:4",
+      "LensLength": "70-210"
+    }
+  ]
 }
