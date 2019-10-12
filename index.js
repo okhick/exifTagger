@@ -21,7 +21,7 @@ if (program.readOnly) {
 
 //load up the photo info
 const csv = ( () => {
-  let rawCSV = fs.readFileSync(`./data/${program.csv}`);
+  let rawCSV = fs.readFileSync(`${program.csv}`);
   let parsedCSV = parse(rawCSV, { columns: true });
   return parsedCSV;
 }) ();

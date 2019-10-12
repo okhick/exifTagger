@@ -62,8 +62,13 @@ class Image {
     exifData.ExposureTime = this.__calculateExposureTime();
     exifData.FNumber = this.__calculateFNumber();
     exifData.ISOSpeedRatings = parseInt(this.exifArgs.ISOSpeedRatings);
-    exifData.FocalLength = this.__calculateFocalLength(this.exifArgs.FocalLength);
-    exifData.FocalLengthIn35mmFilm = this.__calculateFocalLength(this.exifArgs.FocalLengthIn35mmFilm);
+
+    let focalLength = this.__calculateFocalLength(this.exifArgs.FocalLength);
+    if (!isNaN(focalLength[0])) {
+      exifData.FocalLength = focalLength;
+      exifData.FocalLengthIn35mmFilm = this.__calculateFocalLength(this.exifArgs.FocalLengthIn35mmFilm);
+    }
+    
     exifData.ExposureBiasValue = this.__calculateCompensation();
     // console.log(this.exifObject);
   }
