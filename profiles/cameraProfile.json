@@ -13,6 +13,11 @@
       "LensMake": "Canon",
       "LensModel": "FD 70-210mm 1:4",
       "LensLength": "70-210"
+    },
+    {
+      "LensMake": "Canon",
+      "LensModel": "FD 28mm 1:2.8",
+      "LensLength": "28"
     }
   ]
 }
